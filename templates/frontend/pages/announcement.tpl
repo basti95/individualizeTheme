@@ -17,9 +17,9 @@
 {/capture}
 {capture assign="html"}
   {if $announcement->getLocalizedData('description')}
-    {$announcement->getLocalizedData('description')}
+    {$announcement->getLocalizedData('description')|strip_unsafe_html}
   {else}
-    {$announcement->getLocalizedData('descriptionShort')}
+    {$announcement->getLocalizedData('descriptionShort')|strip_unsafe_html}
   {/if}
 {/capture}
 

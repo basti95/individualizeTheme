@@ -79,6 +79,22 @@ class Options
     public const COLOR_MODE_DEFAULT = 'default';
     public const COLOR_MODE_ADVANCED = 'advanced';
 
+    public const COLOR_OPTIONS = [
+        'primaryColor',
+        'accentColor',
+        'pageBackgroundColor',
+        'pageTextColor',
+        'pageLinkColor',
+        'headerBackgroundColor',
+        'headerTextColor',
+        'buttonBackgroundColor',
+        'buttonTextColor',
+        'blockBackgroundColor',
+        'blockTextColor',
+        'footerBackgroundColor',
+        'footerTextColor',
+    ];
+
     public const COLOR_PRIMARY = '#1E102B';
     public const COLOR_ACCENT = '#BC3200';
     public const COLOR_PAGE_BACKGROUND = '#ffffff';
@@ -148,15 +164,15 @@ class Options
         $variables = new Collection([]);
 
         if ($this->theme->getOption('colorMode') === self::COLOR_MODE_DEFAULT) {
-            $variables['--color-primary'] = $this->theme->getOption('primaryColor');
-            $variables['--color-secondary'] = $this->theme->getOption('accentColor');
-            if ($this->theme->isColourDark($this->theme->getOption('primaryColor'))) {
+            $variables['--color-primary'] = $this->getColorOption('primaryColor');
+            $variables['--color-secondary'] = $this->getColorOption('accentColor');
+            if (($color = $this->getColorOption('primaryColor')) !== null && $this->theme->isColourDark($color)) {
                 $variables['--color-text-on-primary'] = 'white';
                 $variables['--color-button-text'] = 'var(--color-primary)';
             } else {
                 $variables['--color-text-on-primary'] = 'rgba(0, 0, 0, 0.85)';
             }
-            if ($this->theme->isColourDark($this->theme->getOption('accentColor'))) {
+            if (($color = $this->getColorOption('accentColor')) !== null && $this->theme->isColourDark($color)) {
                 $variables['--color-page-links'] = 'var(--color-secondary)';
                 $variables['--color-button-text'] = 'var(--color-secondary)';
             } else {
@@ -171,20 +187,23 @@ class Options
             $variables['--color-footer-background'] = 'var(--color-primary)';
             $variables['--color-footer-text'] = 'var(--color-text-on-primary)';
         } else {
-            $variables['--color-header-background'] = $this->theme->getOption('headerBackgroundColor');
-            $variables['--color-header-text'] = $this->theme->getOption('headerTextColor');
-            $variables['--color-page-background'] = $this->theme->getOption('pageBackgroundColor');
-            $variables['--color-page-text'] = $this->theme->getOption('pageTextColor');
-            $variables['--color-page-links'] = $this->theme->getOption('pageLinkColor');
-            $variables['--color-button-background'] = $this->theme->getOption('buttonBackgroundColor');
-            $variables['--color-button-text'] = $this->theme->getOption('buttonTextColor');
-            $variables['--color-block-background'] = $this->theme->getOption('blockBackgroundColor');
-            $variables['--color-block-text'] = $this->theme->getOption('blockTextColor');
-            $variables['--color-overlay-background'] = $this->theme->getOption('blockBackgroundColor');
-            $variables['--color-overlay-text'] = $this->theme->getOption('blockTextColor');
-            $variables['--color-footer-background'] = $this->theme->getOption('footerBackgroundColor');
-            $variables['--color-footer-text'] = $this->theme->getOption('footerTextColor');
+            $variables['--color-header-background'] = $this->getColorOption('headerBackgroundColor');
+            $variables['--color-header-text'] = $this->getColorOption('headerTextColor');
+            $variables['--color-page-background'] = $this->getColorOption('pageBackgroundColor');
+            $variables['--color-page-text'] = $this->getColorOption('pageTextColor');
+            $variables['--color-page-links'] = $this->getColorOption('pageLinkColor');
+            $variables['--color-button-background'] = $this->getColorOption('buttonBackgroundColor');
+            $variables['--color-button-text'] = $this->getColorOption('buttonTextColor');
+            $variables['--color-block-background'] = $this->getColorOption('blockBackgroundColor');
+            $variables['--color-block-text'] = $this->getColorOption('blockTextColor');
+            $variables['--color-overlay-background'] = $this->getColorOption('blockBackgroundColor');
+            $variables['--color-overlay-text'] = $this->getColorOption('blockTextColor');
+            $variables['--color-footer-background'] = $this->getColorOption('footerBackgroundColor');
+            $variables['--color-footer-text'] = $this->getColorOption('footerTextColor');
         }
+
+        // Omit invalid stored colours before generating inline CSS.
+        $variables = $variables->filter(fn($value) => $value !== null);
 
         if ($this->theme->usesCustomFonts($this->enabledFonts)) {
             foreach ($this->enabledFonts as $font) {
@@ -201,6 +220,23 @@ class Options
         }
 
         return $variables;
+    }
+
+    /**
+     * Validate colours using the same format as the core default theme.
+     */
+    public static function isValidColor($value): bool
+    {
+        return is_string($value) && preg_match('/^#[0-9a-fA-F]{1,6}$/', $value) === 1;
+    }
+
+    /**
+     * Ignore invalid colours saved before validation was introduced.
+     */
+    protected function getColorOption(string $name): ?string
+    {
+        $value = $this->theme->getOption($name);
+        return self::isValidColor($value) ? $value : null;
     }
 
     /**
@@ -234,7 +270,8 @@ class Options
         $context = $request->getContext();
         $templateMgr = TemplateManager::getManager($request);
 
-        $blocks = $this->theme->getOption('homepageBlocks');
+        // Check stored values too, so previously saved payloads cannot be included.
+        $blocks = $this->theme->filterHomepageBlocks($this->theme->getOption('homepageBlocks'));
         $templateMgr->assign('homepageBlocks', $blocks);
 
         foreach ($blocks as $template) {

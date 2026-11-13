@@ -38,7 +38,7 @@
       <span class="breadcrumb-separator">/</span>
       {if $section}
         <span class="breadcrumb-item{if !$issue} breadcrumb-item-last{/if}">
-          {$section->getLocalizedTitle()}
+          {$section->getLocalizedTitle()|escape}
         </span>
         <span class="breadcrumb-separator">/</span>
       {/if}
@@ -47,7 +47,7 @@
           class="breadcrumb-item breadcrumb-item-last tab-focus"
           href="{url page="issue" op="view" path=$issue->getBestIssueId()}"
         >
-          {$issue->getIssueIdentification(['showTitle' => false, 'showYear' => false])}
+          {$issue->getIssueIdentification(['showTitle' => false, 'showYear' => false])|escape}
         </a>
       {/if}
     </div>
@@ -407,14 +407,14 @@
                 {include
                   file="frontend/components/metadata-tr-html.tpl"
                   title={translate key="editor.issues.pages"}
-                  html=$publication->getData('pages')
+                  html=$publication->getData('pages')|escape
                 }
               {/if}
               {if $publication->getData('pub-id::publisher-id')}
                 {include
                   file="frontend/components/metadata-tr-html.tpl"
                   title={translate key="submission.publisherId"}
-                  html=$publication->getData('pub-id::publisher-id')
+                  html=$publication->getData('pub-id::publisher-id')|escape
                 }
               {/if}
               {include

@@ -67,6 +67,39 @@ class IndividualizeTheme extends ThemePlugin
         Hook::add('IndividualizeTheme::FullText', [$this, 'addArticleFullText']);
     }
 
+    /** @see ThemePlugin::saveOption() */
+    public function saveOption($name, $value, $contextId = null)
+    {
+        if (in_array($name, Options::COLOR_OPTIONS, true) && !Options::isValidColor($value)) {
+            $value = null;
+        }
+        if ($name === 'homepageBlocks') {
+            $value = $this->filterHomepageBlocks($value);
+        }
+
+        return parent::saveOption($name, $value, $contextId);
+    }
+
+    /**
+     * Only load blocks registered by the theme or trusted plugin code.
+     * Plugins may extend the homepageBlocks field's options, including with
+     * their own template resources. Stored values must match those names exactly.
+     */
+    public function filterHomepageBlocks($blocks): array
+    {
+        if (!is_array($blocks)) {
+            return [];
+        }
+
+        $option = $this->getOptionConfig('homepageBlocks');
+        $allowed = array_column($option->options ?? [], 'value');
+
+        return array_values(array_filter(
+            $blocks,
+            static fn($block) => is_string($block) && in_array($block, $allowed, true)
+        ));
+    }
+
     public function getDisplayName()
     {
         return __('plugins.themes.individualizeTheme.name');

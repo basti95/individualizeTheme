@@ -4,13 +4,13 @@
       <a href="{url page="index"}" class="tab-focus">
         {if $displayPageHeaderLogo}
           <h1 class="sr-only">
-            {$currentContext->getLocalizedName()}
+            {$currentContext->getLocalizedName()|escape}
           </h1>
           <img class="header-mobile-logo" src="{$publicFilesDir}/{$displayPageHeaderLogo.uploadName|escape:"url"}">
         {else}
           {individualize_context_name_length assign="size"}
           <div class="header-mobile-name header-mobile-name-{$size}">
-            {$currentContext->getLocalizedName()}
+            {$currentContext->getLocalizedName()|escape}
           </div>
         {/if}
       </a>

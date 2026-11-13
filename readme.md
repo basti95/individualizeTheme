@@ -39,6 +39,26 @@ npm run start
 
 Two bundles are built. One for the main site (`src/main.js`) and a smaller bundle for the PDF and HTML galley pages (`src/galley.js`).
 
+## Adding Homepage Blocks
+
+Plugins and child themes can add custom homepage blocks to the active theme's
+`homepageBlocks` field during initialization, before settings are saved or the
+homepage is rendered:
+
+```php
+$theme->getOptionConfig('homepageBlocks')->options[] = [
+    'value' => $plugin->getTemplateResource('homepage.tpl'),
+    'label' => __('plugins.generic.myPlugin.homepageBlock'),
+];
+```
+
+Only exact template names registered in this field are accepted when saving and
+rendering homepage blocks. Relative theme template names and registered plugin
+template resources are supported. Register template names from plugin code;
+never populate these choices from request data or stored theme option values.
+Selected blocks keep their configured order. The existing **Plugin Content**
+block also continues to render the `Templates::Index::journal` hook.
+
 ## Package and Release
 
 Update the version in the `package.json` file.

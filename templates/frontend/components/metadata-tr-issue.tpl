@@ -5,7 +5,7 @@
     </h3>
     <div class="html-text">
       <a class="arrow-link tab-focus" href="{url page="issue" op="view" path=$issue->getBestIssueId()}">
-        {$issue->getIssueIdentification()}
+        {$issue->getIssueIdentification()|escape}
         {include file="frontend/icons/arrow-right.svg"}
       </a>
     </div>

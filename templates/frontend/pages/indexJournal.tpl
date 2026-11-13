@@ -11,7 +11,7 @@
     "
   >
     <h1 class="sr-only">
-      {$currentContext->getLocalizedName()}
+      {$currentContext->getLocalizedName()|escape}
     </h1>
 
     {if $homepageBlocks}

@@ -52,8 +52,33 @@
         {/if}
       </div>
       {if $results->getPageCount() > 1}
-        {capture assign="queryParam"}&searchPage={$results->getPage()}{/capture}
-        {assign var="urlPattern" value=$smarty.server.REQUEST_URI|replace:{$queryParam}:''|concat:'&searchPage=__page__'}
+        {capture assign="urlPattern"}{url
+          page="search"
+          op="search"
+          query=$query
+          searchJournal=$searchJournal
+          abstract=$abstract
+          authors=$authors
+          title=$title
+          galleyFullText=$galleyFullText
+          discipline=$discipline
+          subject=$subject
+          type=$type
+          coverage=$coverage
+          indexTerms=$indexTerms
+          dateFromMonth=$dateFromMonth
+          dateFromDay=$dateFromDay
+          dateFromYear=$dateFromYear
+          dateToMonth=$dateToMonth
+          dateToDay=$dateToDay
+          dateToYear=$dateToYear
+          orderBy=$orderBy
+          orderDir=$orderDir
+          searchPage="__page__"
+          escape=false
+        }{/capture}
+        {* Preserve literal placeholders in filters; only searchPage is substituted. *}
+        {assign var="urlPattern" value=$urlPattern|replace:'__page__':'%5F%5Fpage%5F%5F'|replace:'searchPage=%5F%5Fpage%5F%5F':'searchPage=__page__'}
         {th_pagination
           assignPages="pages"
           assignCurrent="currentPage"
@@ -66,6 +91,7 @@
           pages=$pages
           currentPage=$currentPage
           urlPattern=$urlPattern
+          firstPageUrl=$urlPattern|replace:'__page__':1
         }
       {/if}
     </div>
@@ -111,6 +137,7 @@
         pages=$pages
         currentPage=$currentPage
         urlPattern=$urlPattern
+        firstPageUrl=$urlPattern|replace:'__page__':1
       }
     {/if}
   </main>

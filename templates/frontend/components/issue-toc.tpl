@@ -34,7 +34,7 @@
         {* Issue Identification (Vol. X, No. X) and Galleys *}
         <{$issueHeading} class="issue-toc-identification">
           <div class="issue-toc-vol">
-            {$issue->getIssueIdentification(['showTitle' => false, 'showYear' => false])}
+            {$issue->getIssueIdentification(['showTitle' => false, 'showYear' => false])|escape}
           </div>
           {if $issue->getYear()}
             <div class="issue-toc-year">
@@ -85,7 +85,7 @@
                 {$doiUrl}
               </a>
             {else}
-              {$pubId}
+              {$pubId|escape}
             {/if}
           </div>
         {/if}

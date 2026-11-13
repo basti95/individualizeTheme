@@ -24,11 +24,11 @@
           <span class="sr-only">
             {translate
               key="plugins.themes.individualizeTheme.backToTitle"
-              title=$title
+              title=$title|strip_tags|escape
             }
           </span>
           <span aria-hidden="true">
-            {$title}
+            {$title|strip_unsafe_html}
           </span>
         </a>
       </div>

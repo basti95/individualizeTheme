@@ -32,19 +32,19 @@
         <a href="{url page="index"}" class="tab-focus">
           {if $displayPageHeaderLogo}
             <div class="sr-only">
-              {$currentContext->getLocalizedName()}
+              {$currentContext->getLocalizedName()|escape}
             </div>
             <img class="header-desktop-logo" src="{$publicFilesDir}/{$displayPageHeaderLogo.uploadName|escape:"url"}">
           {else}
             {individualize_context_name_length assign="size"}
             <div class="header-desktop-name header-desktop-name-{$size}">
-              {$currentContext->getLocalizedName()}
+              {$currentContext->getLocalizedName()|escape}
             </div>
           {/if}
         </a>
         {if $displayPageHeaderLogo && $activeTheme->getLocalizedOption('tagline') && in_array($activeTheme->getOption('header'), ['default', 'defaultCenter'])}
           <div class="header-desktop-tagline">
-            {$activeTheme->getLocalizedOption('tagline')}
+            {$activeTheme->getLocalizedOption('tagline')|escape}
           </div>
         {/if}
       </div>

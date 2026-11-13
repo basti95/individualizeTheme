@@ -1,7 +1,7 @@
 {assign var="pageTitleTranslated" value={translate key="plugins.themes.individualizeTheme.allIssues"}}
 
 {if $prevPage || $nextPage}
-  {capture assign="urlPattern"}{url page="issue" op="archive" path="__page__"}{/capture}
+  {capture assign="urlPattern"}{url page="issue" op="archive" path="__page__" escape=false}{/capture}
   {th_pagination
     assignPages="pages"
     assignCurrent="currentPage"

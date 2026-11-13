@@ -7,9 +7,9 @@
  * that overrides the $urlPattern.
  *
  * @param int $currentPage
- * @param string $urlPattern The URL for pages with a __page__ placeholder
+ * @param string $urlPattern The unescaped URL for pages with a __page__ placeholder
  *   where the page number should go. For example: /issue/archives/__page__
- * @param string $firstPageUrl (optional) See comment above.
+ * @param string $firstPageUrl (optional) Unescaped URL. See comment above.
  *}
 <nav
   aria-label="{translate|escape key="plugins.themes.individualizeTheme.pagination.prompt"}"
@@ -24,9 +24,9 @@
     {else}
       {assign var="previousPage" value=$currentPage-1}
       {if $previousPage == 1 && $firstPageUrl}
-        href="{$firstPageUrl}"
+        href="{$firstPageUrl|escape}"
       {else}
-        href="{$urlPattern|replace:'__page__':$previousPage}"
+        href="{$urlPattern|replace:'__page__':$previousPage|escape}"
       {/if}
     {/if}
   >
@@ -46,12 +46,12 @@
               aria-current=true
             {elseif $page == 1}
               {if $firstPageUrl}
-                href="{$firstPageUrl}"
+                href="{$firstPageUrl|escape}"
               {else}
-                href="{$urlPattern|replace:'__page__':''}"
+                href="{$urlPattern|replace:'__page__':''|escape}"
               {/if}
             {else}
-              href="{$urlPattern|replace:'__page__':$page}"
+              href="{$urlPattern|replace:'__page__':$page|escape}"
             {/if}
           >
             {$page}
@@ -70,7 +70,7 @@
       disabled=true
     {else}
       {assign var="nextPage" value=$currentPage+1}
-      href="{$urlPattern|replace:'__page__':$nextPage}"
+      href="{$urlPattern|replace:'__page__':$nextPage|escape}"
     {/if}
   >
     {translate key="help.next"}

@@ -33,7 +33,7 @@
         </a>
         <span class="breadcrumb-separator">/</span>
         <span class="breadcrumb-item breadcrumb-item-last">
-          {$issue->getIssueIdentification(['showTitle' => false, 'showYear' => false])}
+          {$issue->getIssueIdentification(['showTitle' => false, 'showYear' => false])|escape}
         </span>
       </div>
       <main
